@@ -91,7 +91,7 @@ exports.handler = async(event, context, cb) => {
 
   cb(null, {
     statusCode: 200,
-    body: JSON.stringify({receivedData: hasuraData})
+    body: "success"
   });
 }
 catch(err){
