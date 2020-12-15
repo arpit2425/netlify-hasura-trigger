@@ -17,6 +17,14 @@ const insert_tracker=`mutation insertTracker($objects: [vas_subscription_tracker
     }
   }
 }`
+const update_tracker=`mutation updateTracker($object: vas_subscription_tracker_set_input,$id:uuid!){
+  update_vas_subscription_tracker(where:{sub_subscription_id:{_eq:$id}},_set:$object){
+    affected_rows
+    returning{
+      id
+    }
+  }
+}`;
 
 exports.handler = async(event, context, cb) => {
   const adminSecret = process.env.ADMIN_SECRET;
@@ -26,6 +34,18 @@ exports.handler = async(event, context, cb) => {
   //const { event: {op, data}, table: {name, schema} } = event;
   
   let request;
+  let {created_by,created_at,modified_at,modified_by,deleted,properties,id,log_remarks,start_date,end_date}=data.new;
+  let payload={
+    created_by,
+    created_at,
+    modified_at,
+    modified_by,
+    deleted,
+    properties,
+    sub_subscription_id:id,
+    log_remarks,
+    
+  }
  
   if(op === 'INSERT'){
     const qv ={id:data.new.sub_package_id};
@@ -48,19 +68,11 @@ exports.handler = async(event, context, cb) => {
    const res=response.data.data;
   console.log(res);
     
- let {created_by,created_at,modified_at,modified_by,deleted,properties,id,log_remarks,start_date,end_date}=data.new;
+
  const service_id=res.vas_sub_packages[0].services[0].service_id;
  const duration=res.vas_sub_packages[0].duration;
-    let payload={
-      created_by,
-      created_at,
-      modified_at,
-      modified_by,
-      deleted,
-      properties,
-      sub_subscription_id:id,
-      log_remarks,
-    }
+ payload.service_id=service_id;
+
     const freq=duration.split(":");
     let frequency;
     if(freq[0] == '01') frequency='M';
@@ -85,7 +97,23 @@ exports.handler = async(event, context, cb) => {
    
   }
   else if(op=== 'UPDATE'){
-    console.log(data);
+    const id=data.old.id;
+    console.log(id);
+    let update_data=JSON.stringify({
+      query:update_tracker,
+      variables:{object:payload,id:id}
+    });
+    let config = {
+      method: 'post',
+      url: hgeEndpoint,
+      headers: { 
+        'content-type': 'application/json', 
+        'x-hasura-admin-secret': adminSecret
+      },
+      data : update_data
+    };
+   const track= await axios(config);
+    console.log(track.data);
 
   }
 
