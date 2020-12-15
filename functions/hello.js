@@ -46,7 +46,7 @@ exports.handler = async(event, context, cb) => {
     
    const response=await axios(config);
    const res=response.data.data;
-  
+  console.log(res);
     
  let {created_by,created_at,modified_at,modified_by,deleted,properties,id,log_remarks,start_date,end_date}=data.new;
  const service_id=res.vas_sub_packages[0].services[0].service_id;
@@ -73,6 +73,7 @@ exports.handler = async(event, context, cb) => {
       final_payload.push(payload);
       start_date=moment(start_date, "YYYY-MM-DD").add(1, frequency).format("YYYY-MM-DD");
     }
+    console.log("final payload ", final_payload);
    
     let insert_data = JSON.stringify({
       query:insert_tracker,
