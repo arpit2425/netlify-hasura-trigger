@@ -97,6 +97,7 @@ exports.handler = async(event, context, cb) => {
    
   }
   else if(op=== 'UPDATE'){
+    console.log(data);
     const id=data.old.id;
     console.log(id);
     let update_data=JSON.stringify({
