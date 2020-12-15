@@ -20,7 +20,7 @@ const insert_tracker=`mutation insertTracker($objects: [vas_subscription_tracker
 const adminSecret = process.env.ADMIN_SECRET;
 const hgeEndpoint = process.env.HGE_ENDPOINT;
 exports.handler = async(event, context, cb) => {
-
+console.log(process.env);
   try{
     const { event: {op, data}, table: {name, schema} } = JSON.parse(event.body);
   //const { event: {op, data}, table: {name, schema} } = event;
