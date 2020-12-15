@@ -60,7 +60,6 @@ exports.handler = async(event, context, cb) => {
       properties,
       sub_subscription_id:id,
       log_remarks,
-      service_id
     }
     const freq=duration.split(":");
     let frequency;
