@@ -85,6 +85,7 @@ exports.handler = async(event, context, cb) => {
    
   }
   else if(op=== 'UPDATE'){
+    console.log(data);
 
   }
 
