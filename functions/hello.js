@@ -80,8 +80,7 @@ exports.handler = async(event, context, cb) => {
     else frequency='d';   
     const final_payload=[];
     while(moment(start_date).isSameOrBefore(end_date)){
-      payload.service_date=start_date;
-      final_payload.push(payload);
+      final_payload.push({...payload,service_date:start_date});
       start_date=moment(start_date, "YYYY-MM-DD").add(1, frequency).format("YYYY-MM-DD");
     }
     console.log("final payload ", final_payload);
